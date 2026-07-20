@@ -125,11 +125,12 @@ spec/System/TestDefence_spec.lua (e.g. Iron Reflexes armour), which is the
 model for the new test.
 
 **Plan:** [Step-by-step implementation plan]
-1. In src/Modules/CalcPerform.lua, after modLib.mergeKeystones, set Condition:HaveAvatarOfFire when env.keystonesAdded["Avatar of Fire"].
+1. In src/Modules/CalcPerform.lua, after modLib.mergeKeystones, set Condition:HaveAvatarOfFire when env.keystonesAdded["Avatar of Fire"] is true.
 2. Verify the Vulconus checkbox still functions when no permanent source is equipped (it grants the keystone, which now implies the condition).
-3. Add a system test covering: Vulconus + Xoph's Blood → +2000 Armour absent and conversion/crit present, regardless of checkbox state.
+3. Add a system test to spec/System/TestDefence_spec.lua covering: Vulconus + a permanent Avatar of Fire source → +2000 Armour line absent and Condition:HaveAvatarOfFire set. Use the correct falsy assertion idiom (assert.is_nil) for the baseline Flag check.
+4. Run the full Busted suite to confirm no regressions before committing.
 
-**Implement:** (https://github.com/ethannguyen128/gravitino/tree/fix-issue-10172)
+**Implement:* (https://github.com/ethannguyen128/PathOfBuilding)
 
 **Review:** Follow CONTRIBUTING.md. Use a conventional commit message
 (e.g. fix: derive Avatar of Fire condition from keystone (#3062)). Keep the
@@ -147,36 +148,35 @@ for a Vulconus-only build.
 
 ### Unit Tests
 
-- [ ] Test case 1: [Description]
-- [ ] Test case 2: [Description]
-- [ ] Test case 3: [Description]
+- [ ] Test case 1: With Vulconus equipped and the config checkbox unchecked, Condition:HaveAvatarOfFire is unset and the +2000 Armour while you do not have Avatar of Fire line is active (Armour >= 2000).
+- [ ] Test case 2: Permanent keystone source: Equipping an item with the bare Avatar of Fire line (as Xoph's Blood grants) sets Condition:HaveAvatarOfFire and drops the conditional armour by exactly 2000.
+- [ ] Test case 3No config-path regression: Verified in code that Vulconus never grants the keystone permanently on its own, so the checkbox behavior (temporary buff) is unchanged.
 
 ### Integration Tests
 
-- [ ] Integration scenario 1
-- [ ] Integration scenario 2
+- [ ] Full Busted system-test suite run end-to-end (build load → item creation → calc pipeline → defence output): 238 passed / 0 failed / 0 errors.
+- [ ]  The #3062 test exercises the real calc path (calcs.perform) via runCallback("OnFrame"), confirming the keystone→condition link is respected by downstream armour calculations.
 
 ### Manual Testing
 
-[What you tested manually and results]
+Automated system tests only, the #3062 test reproduces the exact reported scenario (Vulconus + a permanent Avatar of Fire source) through the full calc pipeline, so no separate GUI pass was performed. Recommended manual spot-check before merge: load a build with Vulconus + Xoph's Blood in the GUI and confirm the Calcs-tab breakdown no longer lists the +2000 Armour while you do not have Avatar of Fire modifier.
 
 ---
 
 ## Implementation Notes
 
-### Week [X] Progress
+### Week [7] Progress
 
-[What you built this week, challenges faced, decisions made]
-
-### Week [Y] Progress
-
-[Continue documenting as you work]
+Reproduced issue #3062 with a failing system test in TestDefence_spec.lua. Root-caused the bug: Condition:HaveAvatarOfFire was only ever set by the Vulconus config checkbox (which models Vulconus's temporary buff), so a permanent source of the Avatar of Fire keystone (Xoph's Blood, tree allocation) never flipped the condition — leaving +2000 Armour while you do not have Avatar of Fire incorrectly active.
 
 ### Code Changes
 
-- **Files modified:** [List]
-- **Key commits:** [Links to important commits]
-- **Approach decisions:** [Why you chose certain approaches]
+- **Files modified:** src/Modules/CalcPerform.lua — force Condition:HaveAvatarOfFire when the keystone is active, spec/System/TestDefence_spec.lua — corrected falsy assertion idiom
+- **Key commits:** (https://github.com/PathOfBuildingCommunity/PathOfBuilding/commit/46183b79d52105e10e844d546970676590d9ff42)
+https://github.com/PathOfBuildingCommunity/PathOfBuilding/commit/6ad1d1f18b0630cd2db49b96ef604199ca83d8c4 
+- **Approach decisions:** Gated on env.keystonesAdded["Avatar of Fire"] (matches existing keystone-detection idiom) instead of adding a new mechanism.
+Left the Vulconus config checkbox untouched, it still correctly models the temporary buff, and the two paths compose without conflict since Vulconus doesn't grant the keystone permanently.
+Used a colon-style mod source ("Keystone:Avatar of Fire") consistent with existing "Tree:" / "Skill:" sources for clear attribution in tooltips.
 
 ---
 
