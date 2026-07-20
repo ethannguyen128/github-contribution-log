@@ -103,10 +103,11 @@ condition should instead be **derived from keystone presence** and be forced
 true whenever the keystone is active, independent of the checkbox.
 
 ### Proposed Solution
-Derive `Condition:HaveAvatarOfFire` from the presence of the Avatar of Fire
-**keystone** in `calcs.perform`, right after keystones are merged. `mergeKeystones`
-already records every granted keystone in `env.keystonesAdded`, so immediately
-after the merge:
+Derive the "has Avatar of Fire" character state directly from keystone presence instead of relying solely on the Vulconus config checkbox.
+
+Vulconus grants Avatar of Fire only temporarily, so PoB gates its "while you (do not) have Avatar of Fire" modifiers on a Condition:HaveAvatarOfFire flag that was set exclusively by the Vulconus config checkbox. That misses the case where a permanent source of the Avatar of Fire keystone is equipped (Xoph's Blood, or a passive-tree allocation): the character always has Avatar of Fire, yet the condition stayed unset, leaving Vulconus's +2000 Armour while you do not have Avatar of Fire line incorrectly active.
+
+The fix sets Condition:HaveAvatarOfFire whenever the Avatar of Fire keystone is actually active, keyed off env.keystonesAdded immediately after keystones are merged in calcs.perform. This reuses the existing keystone-detection idiom (the same env.keystonesAdded table already used in CalcDefence/CalcOffence) and represents the state as a Condition: flag consistent with the rest of the codebase. The config-checkbox path is left untouched — it still models Vulconus's temporary buff, and since Vulconus never grants the keystone permanently on its own, the two paths compose without conflict.
 
 ### Implementation Plan
 
