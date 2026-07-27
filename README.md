@@ -190,7 +190,7 @@ Used a colon-style mod source ("Keystone:Avatar of Fire") consistent with existi
 The fix sets Condition:HaveAvatarOfFire whenever the Avatar of Fire keystone is actually active, keyed off env.keystonesAdded immediately after keystones are merged in calcs.perform. This reuses the existing keystone-detection idiom already used in CalcDefence/CalcOffence, and leaves the config-checkbox path untouched. Vulconus never grants the keystone permanently on its own, so the two paths compose without conflict.
 
 **Maintainer Feedback:**
-- Awaiting feedback
+- 7/27 - Awaiting feedback
 
 **Status:** Awaiting review
 
