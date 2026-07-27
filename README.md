@@ -183,15 +183,16 @@ Used a colon-style mod source ("Keystone:Avatar of Fire") consistent with existi
 
 ## Pull Request
 
-**PR Link:** [GitHub PR URL when submitted]
+**PR Link:** https://github.com/PathOfBuildingCommunity/PathOfBuilding/pull/10030
 
-**PR Description:** [Draft or final PR description - much of the content above can be adapted]
+**PR Description:** Vulconus grants Avatar of Fire only temporarily, so PoB gates its "while you (do not) have Avatar of Fire" modifiers behind a Vulconus config checkbox that sets Condition:HaveAvatarOfFire. That flag was set only by the checkbox, so when a permanent source of the Avatar of Fire keystone is equipped (e.g. Xoph's Blood, or a passive-tree allocation) the character always has Avatar of Fire yet the condition stayed unset. As a result Vulconus's +2000 Armour while you do not have Avatar of Fire line remained incorrectly active (and, conversely, the "while you have Avatar of Fire" crit/conversion lines were gated off).
+
+The fix sets Condition:HaveAvatarOfFire whenever the Avatar of Fire keystone is actually active, keyed off env.keystonesAdded immediately after keystones are merged in calcs.perform. This reuses the existing keystone-detection idiom already used in CalcDefence/CalcOffence, and leaves the config-checkbox path untouched. Vulconus never grants the keystone permanently on its own, so the two paths compose without conflict.
 
 **Maintainer Feedback:**
-- [Date]: [Summary of feedback received]
-- [Date]: [How you addressed it]
+- Awaiting feedback
 
-**Status:** [Awaiting review / Iterating / Approved / Merged]
+**Status:** Awaiting review
 
 ---
 
