@@ -10,7 +10,7 @@
 
 ## Why I Chose This Issue
 
-This issue matches my skills and I was intrigued by thinking about the process to fix this issue.
+This issue relates to skills I want to learn and I was intrigued by thinking about the process to fix this issue.
 
 ---
 
