@@ -4,7 +4,7 @@
 **Contribution Number:** 1
 **Student:** Ethan Nguyen 
 **Issue:** [[GitHub issue link]  ](https://github.com/PathOfBuildingCommunity/PathOfBuilding/issues/3062)
-**Status:** Phase 1 Completed
+**Status:** Phase 4 Completed
 
 ---
 
@@ -107,7 +107,7 @@ Derive the "has Avatar of Fire" character state directly from keystone presence 
 
 Vulconus grants Avatar of Fire only temporarily, so PoB gates its "while you (do not) have Avatar of Fire" modifiers on a Condition:HaveAvatarOfFire flag that was set exclusively by the Vulconus config checkbox. That misses the case where a permanent source of the Avatar of Fire keystone is equipped (Xoph's Blood, or a passive-tree allocation): the character always has Avatar of Fire, yet the condition stayed unset, leaving Vulconus's +2000 Armour while you do not have Avatar of Fire line incorrectly active.
 
-The fix sets Condition:HaveAvatarOfFire whenever the Avatar of Fire keystone is actually active, keyed off env.keystonesAdded immediately after keystones are merged in calcs.perform. This reuses the existing keystone-detection idiom (the same env.keystonesAdded table already used in CalcDefence/CalcOffence) and represents the state as a Condition: flag consistent with the rest of the codebase. The config-checkbox path is left untouched — it still models Vulconus's temporary buff, and since Vulconus never grants the keystone permanently on its own, the two paths compose without conflict.
+The fix sets Condition:HaveAvatarOfFire whenever the Avatar of Fire keystone is actually active, keyed off env.keystonesAdded immediately after keystones are merged in calcs.perform. This reuses the existing keystone-detection idiom (the same env.keystonesAdded table already used in CalcDefence/CalcOffence) and represents the state as a Condition: flag consistent with the rest of the codebase. The config-checkbox path is left untouched and it still models Vulconus's temporary buff, and since Vulconus never grants the keystone permanently on its own, the two paths compose without conflict.
 
 ### Implementation Plan
 
@@ -149,19 +149,18 @@ for a Vulconus-only build.
 
 ### Unit Tests
 
-- [ ] Test case 1: With Vulconus equipped and the config checkbox unchecked, Condition:HaveAvatarOfFire is unset and the +2000 Armour while you do not have Avatar of Fire line is active (Armour >= 2000).
-- [ ] Test case 2: Permanent keystone source: Equipping an item with the bare Avatar of Fire line (as Xoph's Blood grants) sets Condition:HaveAvatarOfFire and drops the conditional armour by exactly 2000.
-- [ ] Test case 3No config-path regression: Verified in code that Vulconus never grants the keystone permanently on its own, so the checkbox behavior (temporary buff) is unchanged.
+- [x ] Test case 1: With Vulconus equipped and the config checkbox unchecked, Condition:HaveAvatarOfFire is unset and the +2000 Armour while you do not have Avatar of Fire line is active (Armour >= 2000).
+- [ x] Test case 2: Permanent keystone source: Equipping an item with the bare Avatar of Fire line (as Xoph's Blood grants) sets Condition:HaveAvatarOfFire and drops the conditional armour by exactly 2000.
+- [ x] Test case 3No config-path regression: Verified in code that Vulconus never grants the keystone permanently on its own, so the checkbox behavior (temporary buff) is unchanged.
 
 ### Integration Tests
 
-- [ ] Full Busted system-test suite run end-to-end (build load → item creation → calc pipeline → defence output): 238 passed / 0 failed / 0 errors.
-- [ ]  The #3062 test exercises the real calc path (calcs.perform) via runCallback("OnFrame"), confirming the keystone→condition link is respected by downstream armour calculations.
+- [x ] Full Busted system-test suite run end-to-end (build load → item creation → calc pipeline → defence output): 238 passed / 0 failed / 0 errors.
+- [ x]  The #3062 test exercises the real calc path (calcs.perform) via runCallback("OnFrame"), confirming the keystone→condition link is respected by downstream armour calculations.
 
 ### Manual Testing
 
-Automated system tests only, the #3062 test reproduces the exact reported scenario (Vulconus + a permanent Avatar of Fire source) through the full calc pipeline, so no separate GUI pass was performed. Recommended manual spot-check before merge: load a build with Vulconus + Xoph's Blood in the GUI and confirm the Calcs-tab breakdown no longer lists the +2000 Armour while you do not have Avatar of Fire modifier.
-
+Verified manually in the GUI: loaded a Vulconus + Xoph's Blood build and confirmed the Calcs-tab breakdown drops the +2000 Armor while you do not have Avatar of Fire modifier
 ---
 
 ## Implementation Notes
