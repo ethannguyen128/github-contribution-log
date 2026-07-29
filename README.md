@@ -131,7 +131,7 @@ model for the new test.
 3. Add a system test to spec/System/TestDefence_spec.lua covering: Vulconus + a permanent Avatar of Fire source → +2000 Armour line absent and Condition:HaveAvatarOfFire set. Use the correct falsy assertion idiom (assert.is_nil) for the baseline Flag check.
 4. Run the full Busted suite to confirm no regressions before committing.
 
-**Implement:* (https://github.com/ethannguyen128/PathOfBuilding)
+*Implement:* (https://github.com/ethannguyen128/PathOfBuilding)
 
 **Review:** Follow CONTRIBUTING.md. Use a conventional commit message
 (e.g. fix: derive Avatar of Fire condition from keystone (#3062)). Keep the
@@ -151,7 +151,7 @@ for a Vulconus-only build.
 
 - [x ] Test case 1: With Vulconus equipped and the config checkbox unchecked, Condition:HaveAvatarOfFire is unset and the +2000 Armour while you do not have Avatar of Fire line is active (Armour >= 2000).
 - [ x] Test case 2: Permanent keystone source: Equipping an item with the bare Avatar of Fire line (as Xoph's Blood grants) sets Condition:HaveAvatarOfFire and drops the conditional armour by exactly 2000.
-- [ x] Test case 3No config-path regression: Verified in code that Vulconus never grants the keystone permanently on its own, so the checkbox behavior (temporary buff) is unchanged.
+- [ x] Test case 3: No config-path regression: Verified in code that Vulconus never grants the keystone permanently on its own, so the checkbox behavior (temporary buff) is unchanged.
 
 ### Integration Tests
 
