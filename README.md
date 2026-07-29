@@ -63,7 +63,7 @@ damage flip based on a checkbox that shouldn't matter.
 
 ### Environment Setup
 
-- **App:** Runs on Windows as-is (bundled SimpleGraphic runtime) — no build step needed to open the GUI and reproduce.
+- **App:** Runs on Windows as-is (bundled SimpleGraphic runtime) and no build step needed to open the GUI and reproduce.
 - **Tests:** Use `busted` on LuaJIT (`busted --lua=luajit`). No Lua toolchain was installed locally, so I relied on the fork's GitHub Actions CI to run the test.
 - **Local setup (next time):** Install LuaJIT + LuaRocks, then `luarocks install busted`; run a single case with `busted --lua=luajit spec/System/TestDefence_spec.lua --filter "issue #3062"`.
 
