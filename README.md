@@ -26,13 +26,13 @@ seconds"), so the user has to tell PoB whether to assume it's active.
 
 The bug appears when the character *also* wears **Xoph's Blood**, an amulet
 that grants the **Avatar of Fire keystone permanently**. In that situation the
-character *always* has Avatar of Fire, so the Vulconus checkbox should be
+character always has Avatar of Fire, so the Vulconus checkbox should be
 irrelevant, but PoB still lets the checkbox drive Vulconus's
 Avatar-of-Fire-conditional stats.
 
 ### Expected Behavior
 
-When any *permanent* source of Avatar of Fire is present (Xoph's Blood, the
+When any permanent source of Avatar of Fire is present (Xoph's Blood, the
 passive tree keystone, an Avatar of Fire tattoo, a Hellscape/Recombinator mod,
 etc.), the character should be treated as **always having Avatar of Fire**.
 Vulconus's conditional lines should resolve accordingly and the checkbox should
@@ -200,20 +200,24 @@ The fix sets Condition:HaveAvatarOfFire whenever the Avatar of Fire keystone is 
 
 ### Technical Skills Gained
 
-[What you learned technically]
+- Better learned how to follow a single piece of state through its write → propagation → read path across a large codebase
+- Got more comfortable identifying where in a multi-stage pipeline a change must go so dependent stages see it, instead of just what to change.
 
 ### Challenges Overcome
 
-[What was hard and how you solved it]
+- Fixed the root cause (keystone presence never fed the condition) instead of special-casing Vulconus, so all permanent Avatar of Fire sources are covered.
+- Verified the config checkbox still works by confirming Vulconus never grants the keystone permanently on its own.
+- Ran the full 238-test suite via Docker since I had no local Lua toolchain.
+- Resolved a rebase conflict where an upstream test landed in the same spot as mine.
 
 ### What I'd Do Differently Next Time
 
-[Reflection on your process]
+- Rebase early as letting the branch fall ~88 commits behind caused an avoidable conflict.
+- Read neighboring tests first  because I would've caught assert.is_nil vs is_falsy immediately
+- Write the test to my full plan, crit/conversion + checkbox toggle, not just the armour drop.
 
 ---
 
 ## Resources Used
 
-- [Link to helpful documentation]
-- [Tutorial or Stack Overflow post that helped]
-- [GitHub issues or discussions that helped]
+- https://github.com/PathOfBuildingCommunity/PathOfBuilding/blob/dev/README.md 
